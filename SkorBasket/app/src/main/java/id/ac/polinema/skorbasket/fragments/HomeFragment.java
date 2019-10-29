@@ -32,7 +32,40 @@ public class HomeFragment extends Fragment {
 
 	public HomeFragment() {
 		// Required empty public constructor
-		//publisher observer pattern
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+							 Bundle savedInstanceState) {
+		// Inflate the layout for this fragment
+		return inflater.inflate(R.layout.fragment_home, container, false);
+	}
+
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+//        instansiasi ViewModel
+		sharedScore = ViewModelProviders.of(requireActivity()).get(SharedScore.class);
+		scoreDuaHome = view.findViewById(R.id.scoreDuaHome);
+		scoreTigaHome = view.findViewById(R.id.scoreTigaHome);
+		scoreHome = view.findViewById(R.id.scoreHome);
+		scoreSatuHome = view.findViewById(R.id.scoreSatuHome);
+
+		// mekanisme penampilan skor pada tim Home dengan menggunakan Observer Pattern
+		//ketika terjadi perubahan UI akan mendapatkan notifikasi data tanpa perlu melakukan proses pengambilan data
+		sharedScore.getScoreHome().observe(requireActivity(), new Observer<Integer>() {
+			@Override
+			public void onChanged(Integer score) {
+				scoreHome.setText(String.valueOf(score));
+				scoreDefault = score;
+			}
+		});
+        //publisher observer pattern
 		scoreDuaHome.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -51,39 +84,6 @@ public class HomeFragment extends Fragment {
 			@Override
 			public void onClick(View view) {
 				sharedScore.setScoreHome(scoreDefault + 1);
-			}
-		});
-	}
-
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		//instansiasi ViewModel
-		sharedScore = ViewModelProviders.of(requireActivity()).get(SharedScore.class);
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_home, container, false);
-	}
-
-	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		scoreDuaHome = view.findViewById(R.id.scoreDuaHome);
-		scoreTigaHome = view.findViewById(R.id.scoreTigaHome);
-		scoreHome = view.findViewById(R.id.scoreHome);
-		scoreSatuHome = view.findViewById(R.id.scoreSatuHome);
-
-		// mekanisme penampilan skor pada tim Home dengan menggunakan Observer Pattern
-		//ketika terjadi perubahan UI akan mendapatkan notifikasi data tanpa perlu melakukan proses pengambilan data
-		sharedScore.getScoreHome().observe(requireActivity(), new Observer<Integer>() {
-			@Override
-			public void onChanged(Integer score) {
-				scoreHome.setText(String.valueOf(score));
-				scoreDefault = score;
 			}
 		});
 	}

@@ -32,6 +32,41 @@ public class VisitorFragment extends Fragment {
 
 	public VisitorFragment() {
 		// Required empty public constructor
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+							 Bundle savedInstanceState) {
+		// Inflate the layout for this fragment
+		return inflater.inflate(R.layout.fragment_visitor, container, false);
+	}
+
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		//instansiasi ViewModel
+		sharedScore = ViewModelProviders.of(requireActivity()).get(SharedScore.class);
+		scoreDuaVisitor = view.findViewById(R.id.scoreDuaVisitor);
+		scoreTigaVisitor = view.findViewById(R.id.scoreTigaVisitor);
+		scoreVisitor = view.findViewById(R.id.scoreVisitor);
+		scoreSatuVisitor = view.findViewById(R.id.scoreSatuVisitor);
+
+
+		// Tambahkan logic tombol di bagian bawah ini
+		//informasi score visitor
+		sharedScore.getScoreVisitor().observe(requireActivity(), new Observer<Integer>() {
+			@Override
+			public void onChanged(Integer score) {
+				scoreVisitor.setText(String.valueOf(score));
+				scoreDefault = score;
+			}
+		});
+
 		//memperbarui informasi score
 		scoreDuaVisitor.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -51,40 +86,6 @@ public class VisitorFragment extends Fragment {
 			@Override
 			public void onClick(View view) {
 				sharedScore.setScoreVisitor(scoreDefault+1);
-			}
-		});
-	}
-
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		//instansiasi ViewModel
-		sharedScore = ViewModelProviders.of(requireActivity()).get(SharedScore.class);
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_visitor, container, false);
-	}
-
-	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		scoreDuaVisitor = view.findViewById(R.id.scoreDuaVisitor);
-		scoreTigaVisitor = view.findViewById(R.id.scoreTigaVisitor);
-		scoreVisitor = view.findViewById(R.id.scoreVisitor);
-		scoreSatuVisitor = view.findViewById(R.id.scoreSatuVisitor);
-
-
-		// Tambahkan logic tombol di bagian bawah ini
-		//informasi score visitor
-		sharedScore.getScoreVisitor().observe(requireActivity(), new Observer<Integer>() {
-			@Override
-			public void onChanged(Integer score) {
-				scoreVisitor.setText(String.valueOf(score));
-				scoreDefault = score;
 			}
 		});
 	}
