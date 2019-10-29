@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
 
 	private ConstraintLayout rootView;
 	private Button btnChangeColor;
+    // Tambahkan ViewModel
+    ColorViewModel colorViewModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,18 +26,15 @@ public class MainActivity extends AppCompatActivity {
 		btnChangeColor = findViewById(R.id.change_color);
 
 		//instansiasi ViewModel
-		final ColorViewModel colorViewModel = ViewModelProviders.of(this).get(ColorViewModel.class);
-		
-		rootView.setBackgroundColor(generateRandomColor());
+        colorViewModel = ViewModelProviders.of(this).get(ColorViewModel.class);
+        rootView.setBackgroundColor(colorViewModel.getColor());
 
 		// Tambahkan event klik pada tombol
 		btnChangeColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				int color = generateRandomColor();
-				rootView.setBackgroundColor(color);
-				//menyimpan warna pada ViewModel
-				colorViewModel.setColor(color);
+                colorViewModel.setColor(generateRandomColor());
+                rootView.setBackgroundColor(colorViewModel.getColor());
 			}
 		});
 	}
